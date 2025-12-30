@@ -1,5 +1,5 @@
 import sys
-from utils import  watcher
+from utils import  watcher, initial_clean
 def main():
     if len(sys.argv) != 2:
         print("Missing arguments.")
@@ -9,6 +9,7 @@ def main():
 
     dir = (sys.argv[1])
 
+    initial_clean(dir)
     watcher(dir)
         
 
