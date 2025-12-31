@@ -1,7 +1,7 @@
 [project]
 name = "dircleaner"
 version = "0.1.0"
-description = "Add your description here"
+description = "A dir cleaner with auto-extract and dir organizer"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
@@ -10,4 +10,11 @@ dependencies = [
     "watchdog>=6.0.0",
 ]
 [project.scripts]
-dircleaner = "main.py:main"
+dircleaner = "src.main:main"
+
+[tool.setuptools]
+packages = ["src"]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"

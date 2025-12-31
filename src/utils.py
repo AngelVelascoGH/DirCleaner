@@ -4,9 +4,9 @@ import shutil
 import os
 import sys
 
-from configs import read_configs
-from extensions import TEMP_DOWNLOAD, ARCHIVES
-from file import File
+from .configs import read_configs
+from .extensions import TEMP_DOWNLOAD, ARCHIVES
+from .file import File
 from pathlib import Path
 from watchdog.events import FileSystemEvent, FileSystemEventHandler
 from watchdog.observers import Observer

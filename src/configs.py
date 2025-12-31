@@ -3,7 +3,7 @@ import sys
 import tomllib
 from pathlib import Path
 
-from extensions import *
+from .extensions import *
 
 CONFIG_DIR = Path.home() / ".config" / "dircleaner"
 CONFIG_FILE = CONFIG_DIR / "config.toml"

@@ -1,7 +1,7 @@
 import shutil
 import sys
-from configs import create_default_config, CONFIG_FILE
-from utils import  watcher, initial_clean
+from .configs import create_default_config, CONFIG_FILE
+from .utils import  watcher, initial_clean
 
 from pathlib import Path
 
