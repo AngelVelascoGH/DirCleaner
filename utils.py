@@ -1,10 +1,18 @@
+from enum import verify
+import rarfile
+import shutil
 import os
+import sys
 
+from configs import read_configs
+from extensions import TEMP_DOWNLOAD, ARCHIVES
 from file import File
 from pathlib import Path
-from extensions import *
 from watchdog.events import FileSystemEvent, FileSystemEventHandler
 from watchdog.observers import Observer
+
+CONFIGS = {}
+DIRS = {}
 
 
 class MyEventHandler(FileSystemEventHandler):
@@ -18,18 +26,21 @@ class MyEventHandler(FileSystemEventHandler):
                     print("Temporary File, ignoring until file is donwloaded")
                     return
                 file = File(event.src_path,extension.lower())
+                if file.get_extension() in ARCHIVES:
+                    print("Auto Extracting file")
+                    extract(file)
+                    return
                 print(f"A new file was created: {file.get_name()}")
                 organize(file)
 
 
 def watcher(dir):
-    current_dir = os.getcwd()
-    target = os.path.join(current_dir,dir)
+    target = verify_dir(dir)
     print(f"Organizing: {target}")
 
     event_handler = MyEventHandler()
     observer = Observer()
-    observer.schedule(event_handler,target,recursive=True)
+    observer.schedule(event_handler,target,recursive=False)
     observer.start()
     try:
         while observer.is_alive():
@@ -39,8 +50,8 @@ def watcher(dir):
         observer.join()
 
 def organize(file):
-    for folder, extensions in DIRECTORIES.items():
-        if file.get_extension() in extensions:
+    for folder, extensions in DIRS.items():
+        if file.get_extension() in extensions and folder != None:
             print(f"Verifying if /{folder} exists in Home")
             target = os.path.join(Path.home(),folder)
 
@@ -62,7 +73,6 @@ def organize(file):
                         id += 1
                 else:
                     target = target / file.get_name()
-
                     
                 source.rename(target)
                 print(f"File {file.get_name()} moved to {target}")
@@ -72,14 +82,59 @@ def organize(file):
             except OSError as e:
                 print(f"An OS error occurred {e}")
 
-    print("File extension not defined, not organizing")
+    print("File extension not defined, or folder not specified in configs, not organizing")
 
 def initial_clean(dir):
-    p = Path(dir)
-    for entry in p.iterdir(): 
-        if not entry.is_dir():
-            current_dir = Path.cwd()
-            file_path = current_dir / entry
-            file = File(file_path,entry.suffix)
-            organize(file)
+    global CONFIGS, DIRS
+    CONFIGS, DIRS = read_configs()
 
+    target = verify_dir(dir)
+    print("Running initial clean")
+    for entry in target.iterdir(): 
+        if not entry.is_dir():
+            file_path = target / entry
+            file = File(file_path,entry.suffix)
+            if file.get_extension() in ARCHIVES:
+                print("Auto Extracting file")
+                extract(file)
+            else:
+                organize(file)
+
+
+def extract(file):
+    if not CONFIGS.get('auto_extract'):
+        print("Auto extract is disabled in configs")
+        return
+    ext = file.get_extension()
+    if ext == '.rar':
+        extract_rar(file)
+    else:
+        extract_archive(file)
+
+def extract_archive(file):
+    try:
+        target = Path(file.get_path()).with_suffix("")
+        print(f"Unpacking to {target}")
+        shutil.unpack_archive(file.get_path(),target)
+        print(f"Successfully extracted all files from {file.get_name()}")
+        Path(file.get_path()).unlink(missing_ok=True)
+    except Exception as e:
+        print(f"Error during extraction: {e}")
+
+def extract_rar(file):
+    try:
+        with rarfile.RarFile(file.get_path()) as rar_archive:
+            rar_archive.extractall(Path(file.get_path()).stem)
+        print(f"Successfully extracted all files from {file.get_name()}")
+    except Exception as e:
+        print(f"Error during extraction: {e}")
+
+def verify_dir(dir):
+    if dir is None:
+        final_dir = Path.home() / CONFIGS.get("watch_dir",'Downloads')
+    else:
+        final_dir = Path.cwd() / dir
+    if not final_dir.exists():
+            print(f"specified dir to watch does not exist")
+            sys.exit(1)
+    return final_dir

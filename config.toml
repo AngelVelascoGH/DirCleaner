@@ -1,0 +1,9 @@
+watch_dir = "Downloads"
+auto_extract = false
+
+[directories]
+pictures = "Pictures"
+documents = "Documents"
+music = "Music"
+videos = "Videos"
+executables = "Executables"

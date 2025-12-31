@@ -94,15 +94,12 @@ EXECUTABLE_EXTENSIONS = {
     '.ipa',
 }
 
-EXTRACTABLES = {
+ARCHIVES = {
     '.zip',
     '.rar',
     '.7z',
     '.tar',
-    '.tar.gz', '.tgz',
-    '.tar.bz2',
-    '.tar.xz',
-    '.gz',
+    '.tar.gz',
 }
 
 TEMP_DOWNLOAD = {
@@ -113,14 +110,6 @@ TEMP_DOWNLOAD = {
     '.tmp',
     '.temp',
     '.filepart',
-}
-
-DIRECTORIES = {
-    "Pictures": IMAGE_EXTENSIONS,
-    "Documents":DOCUMENT_EXTENSIONS,
-    "Music": AUDIO_EXTENSIONS,
-    "Videos": VIDEO_EXTENSIONS,
-    "Executables": EXECUTABLE_EXTENSIONS 
 }
 
 

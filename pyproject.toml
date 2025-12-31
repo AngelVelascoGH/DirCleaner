@@ -6,5 +6,8 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "pathlib>=1.0.1",
+    "rarfile>=4.2",
     "watchdog>=6.0.0",
 ]
+[project.scripts]
+dircleaner = "main.py:main"
