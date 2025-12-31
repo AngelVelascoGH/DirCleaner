@@ -22,7 +22,7 @@ AUDIO_EXTENSIONS = {
     '.ape',
     '.wv',
     '.mp3',
-    '.m4a', '.mp4',
+    '.m4a',
     '.aac',
     '.ogg', '.oga',
     '.opus',
@@ -94,6 +94,26 @@ EXECUTABLE_EXTENSIONS = {
     '.ipa',
 }
 
+EXTRACTABLES = {
+    '.zip',
+    '.rar',
+    '.7z',
+    '.tar',
+    '.tar.gz', '.tgz',
+    '.tar.bz2',
+    '.tar.xz',
+    '.gz',
+}
+
+TEMP_DOWNLOAD = {
+    '.crdownload',
+    '.download',
+    '.part',
+    '.partial',
+    '.tmp',
+    '.temp',
+    '.filepart',
+}
 
 DIRECTORIES = {
     "Pictures": IMAGE_EXTENSIONS,

@@ -14,8 +14,11 @@ class MyEventHandler(FileSystemEventHandler):
                 if event.is_directory:
                     return
                 extension = Path(f"{event.src_path}").suffix
+                if extension in TEMP_DOWNLOAD:
+                    print("Temporary File, ignoring until file is donwloaded")
+                    return
                 file = File(event.src_path,extension.lower())
-                print(f"A new file was created: {file.name}")
+                print(f"A new file was created: {file.get_name()}")
                 organize(file)
 
 
@@ -37,7 +40,7 @@ def watcher(dir):
 
 def organize(file):
     for folder, extensions in DIRECTORIES.items():
-        if file.extension in extensions:
+        if file.get_extension() in extensions:
             print(f"Verifying if /{folder} exists in Home")
             target = os.path.join(Path.home(),folder)
 
@@ -46,11 +49,23 @@ def organize(file):
                 os.mkdir(target)
 
             source = Path(file.path)
-            target = Path(target) / file.name
+            target = Path(target)
+
 
             try:
+                if (target / file.get_name()).exists():
+                    print("File already exists in target Dir, ")
+                    id = 1
+                    file.set_name(source.stem + "_" + f"{id}" + file.extension)
+                    target = Path(target / (file.get_name()))
+                    while (target.exists()):
+                        id += 1
+                else:
+                    target = target / file.get_name()
+
+                    
                 source.rename(target)
-                print(f"File {file.name} moved to {target}")
+                print(f"File {file.get_name()} moved to {target}")
                 return
             except FileNotFoundError:
                 print(f"Error: source file not found at {source}")
