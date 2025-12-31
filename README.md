@@ -25,7 +25,8 @@ uv sync
 
 3. Install as executable:
 ```
-uv pip install -e .
+uv pip install -e . (Inside a venv)
+uv tool install . (system wide)
 ```
 
 This creates a `dircleaner` command available system-wide.
