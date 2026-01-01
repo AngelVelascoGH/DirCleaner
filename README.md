@@ -1,6 +1,6 @@
 # DirCleaner
 
-A file organization tool that automatically sorts files into categorized folders based on their extensions and handles duplicates/archives. It can run as a one-time cleanup or continuously monitor a directory for new files.
+A personal project that consists of a file organization tool that automatically sorts files into categorized folders based on their extensions and handles duplicates/archives. It can run as a one-time cleanup or continuously monitor a directory for new files.
 
 ## Features
 
